@@ -9,8 +9,8 @@ except RuntimeError:
     print("Error importing RPi.GPIO!  This is probably because you need superuser privileges.  You can achieve this by using 'sudo' to run your script")
 
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(21, GPIO.OUT, initial=GPIO.HIGH) #E-Stop Button (Pull to Gnd)
-GPIO.setup(20, GPIO.OUT, initial=GPIO.HIGH) #Start Button
+GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP) #E-Stop Button (Pull to Gnd)
+GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start Button
 class leaderboard:
 
     def __init__(self, datafile='playerData.txt'):
