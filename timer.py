@@ -75,6 +75,7 @@ def main(stdscr):
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)
     curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_RED)
+    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_YELLOW)
     while True:
         stdscr.clear()
         stdscr.bkgd(" ", curses.color_pair(2))
@@ -102,7 +103,7 @@ def main(stdscr):
             curses.beep()
     
 def stopWatch():
-    sw_window = curses.newwin(5, 40, curses.LINES // 2 ,curses.COLS // 2 - 20)
+    sw_window = curses.newwin(4, 40, curses.LINES // 2 ,curses.COLS // 2 - 20)
     sw_window.bkgd(" ", curses.color_pair(3))
     sw_window.clear()
     sw_window.addstr(1,1, "0:0.0000", curses.A_BLINK)
@@ -129,6 +130,7 @@ def stopWatch():
         elif keyIn == A_KEY:
             return None
         elif keyIn == S_KEY:
+            
             return totalTime
         else:
             curses.beep()
@@ -167,9 +169,11 @@ def newPlayer():
         }
         playerpos = timerboard.add(entry)
         confirmwindow = curses.newwin(curses.LINES, curses.COLS, 0, 0)
-        confirmwindow.bkgd(" ", curses.color_pair(6))
-        confirmwindow.addstr(curses.LINES // 2, 10, "Your Position: " + str(playerpos))
-        confirmwindow.addstr((curses.LINES // 2) + 1, 10, "Press any Key", curses.A_BLINK)
+        #confirmwindow.bkgd(" ", curses.color_pair(6))
+        confirmwindow.addstr(curses.LINES // 2, curses.COLS //2 - 8, "Your Position: " + str(playerpos), curses.color_pair(6))
+        confirmwindow.addstr((curses.LINES // 2) + 1, curses.COLS //2 - 7, "Press any Key", curses.color_pair(6))
+        confirmwindow.chgat((curses.LINES //2),0, curses.color_pair(6))
+        confirmwindow.chgat((curses.LINES //2) + 1, 0, curses.color_pair(6))
         confirmwindow.getch()
         del confirmwindow
         
