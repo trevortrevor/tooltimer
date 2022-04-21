@@ -80,7 +80,7 @@ def main(stdscr):
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)
     curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_RED)
-    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_YELLOW)
+    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_YELLOW)
     while True:
         stdscr.clear()
         stdscr.bkgd(" ", curses.color_pair(2))
@@ -124,6 +124,11 @@ def stopWatch():
     totalTime = None
     while True:
         if keyIn == SPACE_KEY:
+            while GPIO.input(21) == False:
+                sw_window.addstr(4,1, "Reset the E-Stop Button")
+                sw_window.refresh()
+            sw_window.move(4,1)
+            sw_window.deleteln()
             if firstRun:
                 startTime = time.time()
                 firstRun = False           
@@ -131,8 +136,6 @@ def stopWatch():
             while GPIO.input(21) == False:
                 sw_window.addstr(4,1, "Reset the E-Stop Button")
                 sw_window.refresh()
-            sw_window.move(4,1)
-            sw_window.deleteln()
             sw_window.nodelay(0)
             keyIn = sw_window.getch()
         elif keyIn == R_KEY:
