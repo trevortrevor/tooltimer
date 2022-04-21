@@ -72,7 +72,7 @@ def timer(startTime, win):
         win.addstr(1, 1, timeconvert(currentTime), curses.A_BOLD)
         win.refresh()
         stopKey = win.getch()
-        if stopKey == SPACE_KEY or GPIO.input(13) == False:
+        if stopKey == SPACE_KEY or GPIO.input(21) == False:
             return startTime, time.time() - startTime
 
 def main(stdscr):
@@ -116,7 +116,7 @@ def stopWatch():
     sw_window.addstr(3,1, "Submit(s), Reset(r), Abort(a)")
     firstRun = True
     sw_window.nodelay(1)
-    while GPIO.input(28) == True:
+    while GPIO.input(20) == True:
         keyIn = sw_window.getch()
         if keyIn == SPACE_KEY:
             break
@@ -128,7 +128,7 @@ def stopWatch():
                 startTime = time.time()
                 firstRun = False           
             startTime, totalTime = timer(startTime, sw_window)
-            while GPIO.input(13) == False:
+            while GPIO.input(21) == False:
                 sw_window.addstr(4,1, "Reset the E-Stop Button")
                 sw_window.refresh()
             sw_window.move(4,1)
