@@ -3,9 +3,14 @@ from curses import wrapper
 import curses
 from curses.textpad import Textbox, rectangle
 import json
+try:
+    import RPi.GPIO as GPIO
+except RuntimeError:
+    print("Error importing RPi.GPIO!  This is probably because you need superuser privileges.  You can achieve this by using 'sudo' to run your script")
 
-
-
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP) #E-Stop Button (Pull to Gnd)
+GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start Button
 class leaderboard:
 
     def __init__(self, datafile='playerData.txt'):
@@ -67,7 +72,7 @@ def timer(startTime, win):
         win.addstr(1, 1, timeconvert(currentTime), curses.A_BOLD)
         win.refresh()
         stopKey = win.getch()
-        if stopKey == SPACE_KEY:
+        if stopKey == SPACE_KEY or GPIO.input(21) == False:
             return startTime, time.time() - startTime
 
 def main(stdscr):
@@ -75,7 +80,7 @@ def main(stdscr):
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)
     curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_RED)
-    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_YELLOW)
+    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_YELLOW)
     while True:
         stdscr.clear()
         stdscr.bkgd(" ", curses.color_pair(2))
@@ -103,21 +108,34 @@ def main(stdscr):
             curses.beep()
     
 def stopWatch():
-    sw_window = curses.newwin(4, 40, curses.LINES // 2 ,curses.COLS // 2 - 20)
+    sw_window = curses.newwin(5, 40, curses.LINES // 2 ,curses.COLS // 2 - 20)
     sw_window.bkgd(" ", curses.color_pair(3))
     sw_window.clear()
     sw_window.addstr(1,1, "0:0.0000", curses.A_BLINK)
     rectangle(sw_window, 0, 0, 2, 19)
     sw_window.addstr(3,1, "Submit(s), Reset(r), Abort(a)")
     firstRun = True
-    keyIn = sw_window.getch()
+    sw_window.nodelay(1)
+    while GPIO.input(20) == True:
+        keyIn = sw_window.getch()
+        if keyIn == SPACE_KEY:
+            break
+    keyIn = SPACE_KEY
     totalTime = None
     while True:
         if keyIn == SPACE_KEY:
+            while GPIO.input(21) == False:
+                sw_window.addstr(4,1, "Reset the E-Stop Button")
+                sw_window.refresh()
+            sw_window.move(4,1)
+            sw_window.deleteln()
             if firstRun:
                 startTime = time.time()
-                firstRun = False
+                firstRun = False           
             startTime, totalTime = timer(startTime, sw_window)
+            while GPIO.input(21) == False:
+                sw_window.addstr(4,1, "Reset the E-Stop Button")
+                sw_window.refresh()
             sw_window.nodelay(0)
             keyIn = sw_window.getch()
         elif keyIn == R_KEY:
