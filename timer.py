@@ -2,9 +2,9 @@ import time
 from curses import wrapper
 import curses
 from curses.textpad import Textbox, rectangle
-import datetime
-from collections import OrderedDict
 import json
+
+
 
 class leaderboard:
 
