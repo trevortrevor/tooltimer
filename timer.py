@@ -128,6 +128,8 @@ def stopWatch():
             keyIn = sw_window.getch()
         elif keyIn == A_KEY:
             return None
+        elif keyIn == S_KEY:
+            return totalTime
         else:
             curses.beep()
     return totalTime
