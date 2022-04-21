@@ -108,7 +108,7 @@ def main(stdscr):
             curses.beep()
     
 def stopWatch():
-    sw_window = curses.newwin(4, 40, curses.LINES // 2 ,curses.COLS // 2 - 20)
+    sw_window = curses.newwin(5, 40, curses.LINES // 2 ,curses.COLS // 2 - 20)
     sw_window.bkgd(" ", curses.color_pair(3))
     sw_window.clear()
     sw_window.addstr(1,1, "0:0.0000", curses.A_BLINK)
