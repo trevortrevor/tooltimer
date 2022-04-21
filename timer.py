@@ -8,7 +8,7 @@ try:
 except RuntimeError:
     print("Error importing RPi.GPIO!  This is probably because you need superuser privileges.  You can achieve this by using 'sudo' to run your script")
 
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP) #E-Stop Button (Pull to Gnd)
 GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Start Button
 class leaderboard:
